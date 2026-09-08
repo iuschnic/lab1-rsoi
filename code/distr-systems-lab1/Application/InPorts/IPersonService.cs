@@ -9,5 +9,5 @@ public interface IPersonService
     public Task<PersonDto> GetByIdAsync(int id, CancellationToken ct = default);
     public Task<int> CreateAsync(PersonRequestDto request, CancellationToken ct = default);
     public Task<PersonDto> UpdateAsync(int id, PersonRequestDto request, CancellationToken ct = default);
-    public Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    public Task DeleteAsync(int id, CancellationToken ct = default);
 }

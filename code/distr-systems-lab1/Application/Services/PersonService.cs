@@ -8,9 +8,9 @@ namespace Application.Services;
 
 public class PersonService(IPersonRepository repository) : IPersonService
 {
-    public Task<IReadOnlyList<PersonDto>> GetAllAsync(CancellationToken ct = default)
+    public async Task<IReadOnlyList<PersonDto>> GetAllAsync(CancellationToken ct = default)
     {
-        return repository.GetAllAsync(ct);
+        return await repository.GetAllAsync(ct);
     }
 
     public async Task<PersonDto> GetByIdAsync(int id, CancellationToken ct = default)
@@ -34,8 +34,8 @@ public class PersonService(IPersonRepository repository) : IPersonService
         return await repository.UpdateAsync(person, ct);
     }
 
-    public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+    public async Task DeleteAsync(int id, CancellationToken ct = default)
     {
-        return repository.DeleteAsync(id, ct);
+        await repository.DeleteAsync(id, ct);
     }
 }

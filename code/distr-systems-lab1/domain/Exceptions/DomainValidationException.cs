@@ -3,5 +3,5 @@
 public class DomainValidationException : DomainException
 {
     public DomainValidationException(string message) : base(message) { }
-    public DomainValidationException() : base("Domain validation error") { }
+    public DomainValidationException() : base("Domain-level validation error") { }
 }

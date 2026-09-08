@@ -10,5 +10,5 @@ public interface IPersonRepository
     Task<Person?> GetDomainByIdAsync(int id, CancellationToken ct = default);
     Task<int> AddAsync(Person person, CancellationToken ct = default);
     Task<PersonDto> UpdateAsync(Person person, CancellationToken ct = default);
-    Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    Task DeleteAsync(int id, CancellationToken ct = default);
 }
