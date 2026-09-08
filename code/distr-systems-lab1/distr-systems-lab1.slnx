@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="distr-systems-lab1/API.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+</Solution>
