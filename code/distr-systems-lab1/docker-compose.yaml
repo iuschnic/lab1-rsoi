@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16
+    container_name: persons-db
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: persons
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d persons"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: persons-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__PostgresConnection: "Host=db;Port=5432;Database=persons;Username=app;Password=app"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
