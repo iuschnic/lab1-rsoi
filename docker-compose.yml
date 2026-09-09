@@ -13,6 +13,19 @@ services:
       - ./postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: persons-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__PostgresConnection: "Host=postgres;Port=5432;Database=persons;Username=postgres;Password=postgres"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
 
 volumes:
   db-data:
