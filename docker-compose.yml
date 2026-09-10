@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    image: library/postgres:13
+    image: postgres:16
     container_name: postgres
     restart: on-failure
     environment:
@@ -13,6 +13,24 @@ services:
       - ./postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d persons"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: persons-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__PostgresConnection: "Host=postgres;Port=5432;Database=persons;Username=postgres;Password=postgres"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
 
 volumes:
   db-data:
