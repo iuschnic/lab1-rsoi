@@ -43,11 +43,11 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseSwagger(options =>
 {
-    options.RouteTemplate = "api/v1/swagger/swagger.json";
+    options.RouteTemplate = "api/swagger/{documentName}/swagger.json";
 });
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/api/v1/swagger/swagger.json", "API V1");
+    options.SwaggerEndpoint("/api/swagger/v1/swagger.json", "API V1");
     options.RoutePrefix = "api/swagger";
 });
 app.MapControllers();
