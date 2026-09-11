@@ -208,8 +208,8 @@ public class PersonTests
 
         person.Update(ValidName);
 
-        person.Age.Should().BeNull();
-        person.Address.Should().BeNull();
-        person.Work.Should().BeNull();
+        person.Age.Should().Be(ValidAge);
+        person.Address.Should().Be(ValidAddress);
+        person.Work.Should().Be(ValidWork);
     }
 }
