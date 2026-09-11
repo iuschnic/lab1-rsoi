@@ -17,11 +17,16 @@ jobs:
           
       # TODO build, test and deploy project
       
-      - name: Build Docker image
+      - name: Build test image
+        run: docker build -f Dockerfile_unit -t persons-unit-tests .
+
+      - name: Run unit tests
+        run: docker run --rm persons-unit-tests
+      
+      - name: Build main image
         run: docker build -t persons-api:latest -f Dockerfile .
       
       - name: Deploy to Render
-        if: success()
         run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
 
       - name: Run API Tests

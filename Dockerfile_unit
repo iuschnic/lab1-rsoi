@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY ["./code/Domain/", "Domain/"]
+COPY ["./code/UnitTests/", "UnitTests/"]
+
+RUN dotnet restore "UnitTests/UnitTests.csproj"
+
+RUN dotnet build "UnitTests/UnitTests.csproj" -c Release --no-restore
+
+ENTRYPOINT ["sh", "-c", \
+  "echo 'Running unit tests...' && \
+   dotnet test UnitTests/UnitTests.csproj -c Release --no-build"]
