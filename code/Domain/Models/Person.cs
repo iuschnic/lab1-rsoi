@@ -37,10 +37,10 @@ public class Person
     public void Update(string newName, int? newAge = null, string? newAddress = null, string? newWork = null)
     {
         Validate(newName, newAge, newAddress, newWork);
-        Name = newName;
-        Age = newAge;
-        Address = newAddress;
-        Work = newWork;
+        Name = newName ?? Name;
+        Age = newAge ?? Age;
+        Address = newAddress ?? Address;
+        Work = newWork ?? Work;
     }
 
     private static void Validate(string name, int? age = null, string? address = null, string? work = null)
