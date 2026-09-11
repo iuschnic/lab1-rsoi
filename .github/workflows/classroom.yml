@@ -1,4 +1,5 @@
 name: GitHub Classroom Workflow
+
 on:
   push:
     branches:
@@ -6,28 +7,41 @@ on:
   pull_request:
     branches:
       - master
+
 jobs:
-  build:
-    name: Autograding
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
-      # TODO build, test and deploy project
-      
+
       - name: Build test image
         run: docker build -f Dockerfile_unit -t persons-unit-tests .
 
       - name: Run unit tests
         run: docker run --rm persons-unit-tests
-      
+
+  full:
+    name: Full Pipeline
+    needs: unit-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Build main image
         run: docker build -t persons-api:latest -f Dockerfile .
-      
+
       - name: Deploy to Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        uses: JorgeLNJunior/render-deploy@v1.5.0
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
 
       - name: Run API Tests
         uses: matt-ball/newman-action@master
@@ -49,5 +63,4 @@ jobs:
           homework_number: 1
           user_column: 'D'
           column_offset: 'F'
-          mark: "'+"
-      
+          mark: "'+'"
