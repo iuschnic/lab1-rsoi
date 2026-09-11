@@ -27,7 +27,12 @@ jobs:
         run: docker build -t persons-api:latest -f Dockerfile .
       
       - name: Deploy to Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: JorgeLNJunior/render-deploy@v1.5.0
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
 
       - name: Run API Tests
         uses: matt-ball/newman-action@master
