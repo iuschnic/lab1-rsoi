@@ -37,10 +37,10 @@ public class Person
     public void Update(string newName, int? newAge = null, string? newAddress = null, string? newWork = null)
     {
         Validate(newName, newAge, newAddress, newWork);
-        Name = newName;
-        Age = newAge;
-        Address = newAddress;
-        Work = newWork;
+        Name = newName ?? Name;
+        Age = newAge ?? Age;
+        Address = newAddress ?? Address;
+        Work = newWork ?? Work;
     }
 
     private static void Validate(string name, int? age = null, string? address = null, string? work = null)
@@ -51,19 +51,16 @@ public class Person
             throw new DomainValidationException($"Name cannot exceed {NameMaxLength} characters");
         if (age.HasValue && age < 0)
             throw new DomainValidationException("Age cannot be negative");
-        if (address != null && string.IsNullOrWhiteSpace(address))
-        {
-            if (string.IsNullOrWhiteSpace(address))
-                throw new DomainValidationException("Address should not be whitespace or empty string if not null");
-            if (address.Length > AddressMaxLength)
-                throw new DomainValidationException($"Address cannot exceed {AddressMaxLength} characters");
-        }
-        if (work != null && string.IsNullOrWhiteSpace(work))
-        {
-            if (string.IsNullOrWhiteSpace(work))
-                throw new DomainValidationException("Work should not be whitespace or empty string if not null");
-            if (work.Length > WorkMaxLength)
-                throw new DomainValidationException($"Work cannot exceed {WorkMaxLength} characters");
-        }
+        ValidateOptionalString(address, AddressMaxLength, nameof(address));
+        ValidateOptionalString(work, WorkMaxLength, nameof(work));
+    }
+
+    private static void ValidateOptionalString(string? value, int maxLength, string fieldName)
+    {
+        if (value == null) return;
+        if (string.IsNullOrWhiteSpace(value))
+            throw new DomainValidationException($"{fieldName} should not be whitespace or empty string if not null");
+        if (value.Length > maxLength)
+            throw new DomainValidationException($"{fieldName} cannot exceed {maxLength} characters");
     }
 }
